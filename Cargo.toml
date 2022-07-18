@@ -1,0 +1,16 @@
+[package]
+name = "blog_os"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+# `cargo build` 실행 시 이용되는 빌드 설정
+[profile.dev]
+panic = "abort" # 패닉 시 스택 되감기를 하지 않고 바로 프로그램 종료
+
+# `cargo build --release` 실행 시 이용되는 빌드 설정
+[profile.release]
+panic = "abort" # 패닉 시 스택 되감기를 하지 않고 바로 프로그램 종료
