@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/kimwang0906/Desktop/P.Files/blog_os'
+make: Leaving directory '/home/kimwang0906/Desktop/P.Files/blog_os'
+ 
+make: *** No targets.  Stop.
+
