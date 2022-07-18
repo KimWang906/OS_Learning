@@ -30,6 +30,17 @@ C 런타임 시스템을 사용할 것이라고 가정하기 때문에 링커 �
 
 C 런타임을 링크하려고 시도하지 않으며 이제는 링커 에러 없이 빌드가 성공할 것입니다.
 
+## 참고 자료
+
+    https://hacking-yi.kro.kr/?p=233
+
+    https://os.phil-opp.com/ko/
+
+## 주의
+
+    현재 /home/자신의 계정이름/.cargo 경로에 config.toml 파일로 인해 기존 rust 개발환경에 문제가 있을 수 있습니다.
+    이는 추후 해결할 예정입니다.
+
 ## Chapter 1:
 
 ### Source code
@@ -111,6 +122,11 @@ C 런타임을 링크하려고 시도하지 않으며 이제는 링커 에러 �
     qemu-system-x86_64 -drive format=raw,file=target/x86_64-blog_os/debug/bootimage-blog_os.bin
 
     qemu-system-x86_64 -drive format=raw,file=target/파일의 경로
+
+#### 실제 컴퓨터에서 부팅하기
+
+    dd if=target/x86_64-blog_os/debug/bootimage-blog_os.bin of=/dev/sdX && sync
+    /dev/기기명
 
 ### Source code
 

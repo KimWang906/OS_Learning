@@ -9,13 +9,13 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-static HELLO: &[u8] = b"Hello World!";
+static TEXT: &[u8] = b"Hello World!";
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     let vga_buffer = 0xb8000 as *mut u8;
 
-    for (i, &byte) in HELLO.iter().enumerate() {
+    for (i, &byte) in TEXT.iter().enumerate() {
         unsafe { //무슨 일이 있어도 unsafe는 최소한으로 사용할 것
             *vga_buffer.offset(i as isize * 2) = byte;
             *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
