@@ -135,35 +135,76 @@ impl Writer {
     }
 }
 
-pub static WRITER: Writer = Writer {
-    column_position: 0,
-    color_code: ColorCode::new(Color::Yellow, Color::Black),
-    buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-};
+/*
+    문제는 Rust의 const evaluator가 컴파일 시간에 raw pointer를 레퍼런스로 전환하지 못한다는 것입니다.
+    추후에는 이것이 가능해질 수도 있겠지만, 현재로서는 다른 해결책을 찾아야 합니다.
 
-//최종적으로 화면에 출력되는 문자열
-pub fn print_something() {
-    /*
-        우선 메모리 주소 0xb8000을 가리키는 새로운 Writer 인스턴스를 생성합니다.
-        이를 구현한 코드가 다소 난해하게 느껴질 수 있으니 단계별로 나누어 설명드리겠습니다.
+    Wrong code :
+        pub static WRITER: Writer = Writer {
+            column_position: 0,
+            color_code: ColorCode::new(Color::Yellow, Color::Black),
+            buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },                           
+        };
+*/
 
-        먼저 정수 0xb8000을 읽기/쓰기 모두 가능한 (mutable) 포인터로 타입 변환합니다.
-        그 후 * 연산자를 통해 이 포인터를 역참조 (dereference) 하고 &mut를 통해
-        즉시 borrow 함으로써 해당 주소에 저장된 값을 변경할 수 있는 레퍼런스 (mutable reference)를 만듭니다.
-        여기서 Rust 컴파일러는 포인터의 유효성 및 안전성을 보증할 수 없기에, unsafe 블록을 사용해야만 포인터를 Reference로 변환할 수 있습니다.
+/*
+    현재 WRITER는 immutable (읽기 가능, 쓰기 불가능) 하여 실질적인 쓸모가 없습니다.
+    모든 쓰기 함수들은 첫 인자로 &mut self를 받기 때문에 WRITER로 어떤 쓰기 작업도 할 수가 없습니다.
+    이에 대한 해결책으로 mutable static은 어떨까요? 
+    이 선택지를 고른다면 모든 읽기 및 쓰기 작업이 데이터 경쟁 상태 (data race) 및 기타 위험에 노출되기에 안전을 보장할 수 없게 됩니다.
+    Rust에서 static mut는 웬만하면 사용하지 않도록 권장되며, 심지어 Rust 언어에서 완전히 static mut를 제거하자는 제안이 나오기도 했습니다.
+    이것 이외에도 대안이 있을까요? 내부 가변성 (interior mutability)을 제공하는 RefCell 혹은 UnsafeCell 을 통해 immutable한 정적 변수를 만드는 것은 어떨까요?
+    이 타입들은 중요한 이유로 Sync 트레이트를 구현하지 않기에 정적 변수를 선언할 때에는 사용할 수 없습니다.
 
-        그 다음 Writer 인스턴스에 바이트 b'H'를 적습니다. 
-        접두사 b는 ASCII 문자를 나타내는 바이트 상수 (literal) 를 생성합니다.
-    */
-    use core::fmt::Write;
-    let mut writer = Writer {
+    Wrong code :
+        use lazy_static::lazy_static;
+
+        lazy_static! {
+            pub static ref WRITER: Writer = Writer {
+                column_position: 0,
+                color_code: ColorCode::new(Color::Yellow, Color::Black),
+                buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+            };
+        }
+*/
+
+/*
+    스핀 락 (Spinlocks)
+
+    표준 라이브러리의 Mutex는 동기화된 내부 가변성 (interior mutability)을 제공합니다.
+    Mutex는 접근하려는 리소스가 잠겼을 때 현재 스레드를 블로킹 (blocking) 하는 것으로 상호 배제 (mutual exclusion)를 구현합니다.
+    우리의 커널은 스레드 블로킹은 커녕 스레드의 개념조차 구현하지 않기에 Mutex를 사용할 수 없습니다.
+    그 대신 우리에게는 운영체제 기능이 필요 없는 원시적인 스핀 락 (spinlock)이 있습니다.
+    스핀 락은 Mutex와 달리 스레드를 블로킹하지 않고,
+    리소스의 잠김이 풀릴 때까지 반복문에서 계속 리소스 취득을 시도하면서 CPU 시간을 소모합니다.
+*/
+
+// 이제 스핀 락을 이용해 전역 변수 WRITER에 안전하게 내부 가변성 (interior mutability) 을 구현할 수 있습니다.
+use spin::Mutex;
+use lazy_static::lazy_static;
+
+lazy_static! {
+    pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Yellow, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-    };
-
-    writer.write_byte(b'H');
-    writer.write_string("ello! ");
-    write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap();
+    });
 }
 
+//println macro_export
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    () => ($crate::print!("\n"));
+    ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _print(args: fmt::Arguments) {
+    use core::fmt::Write;
+    WRITER.lock().write_fmt(args).unwrap();
+}

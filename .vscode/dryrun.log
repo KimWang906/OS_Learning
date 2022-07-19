@@ -1,6 +1,6 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/kimwang0906/Desktop/P.Files/blog_os'
+cargo bootimage
+qemu-system-x86_64 -drive format=raw,file=target/x86_64-blog_os/debug/bootimage-blog_os.bin
 make: Leaving directory '/home/kimwang0906/Desktop/P.Files/blog_os'
  
-make: *** No targets.  Stop.
-

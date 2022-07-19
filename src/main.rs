@@ -6,12 +6,15 @@ mod vga_buffer; //vag_buffer Module 사용
 
 /// 패닉이 일어날 경우, 이 함수가 호출됩니다.
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+    println!("{}", info);
     loop {}
 }
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    vga_buffer::print_something();
+
+    println!("Testing println macro");
+
     loop {}
 }
