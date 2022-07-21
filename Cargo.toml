@@ -13,11 +13,25 @@ features = ["spin_no_std"]
 bootloader = "0.9.8"
 volatile = "0.2.6"
 spin = "0.5.2"
+x86_64 = "0.14.2"
+uart_16550 = "0.2.0"
 
-# `cargo build` 실행 시 이용되는 빌드 설정
-[profile.dev]
-panic = "abort" # 패닉 시 스택 되감기를 하지 않고 바로 프로그램 종료
+[package.metadata.bootimage]
+# iobase가 해당 포트 주소를 배정 받은 이유는 x86의 IO 버스에서 일반적으로 사용되지 않는 포트 주소이기 때문입니다.
+# iosize는 4byte 입니다.
+test-args = [
+    "-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "stdio",
+    "-display", "none"
+]
+test-success-exit-code = 33       # (0x10 << 1) | 1
+test-timeout = 300          # (in seconds)
 
-# `cargo build --release` 실행 시 이용되는 빌드 설정
-[profile.release]
-panic = "abort" # 패닉 시 스택 되감기를 하지 않고 바로 프로그램 종료
+# 주의 : 현재 Cargo에 버그가 있어 일부 경우 cargo test에서 "duplicate lang item" 오류가 발생합니다.
+
+# # `cargo build` 실행 시 이용되는 빌드 설정
+# [profile.dev]
+# panic = "abort" # 패닉 시 스택 되감기를 하지 않고 바로 프로그램 종료
+
+# # `cargo build --release` 실행 시 이용되는 빌드 설정
+# [profile.release]
+# panic = "abort" # 패닉 시 스택 되감기를 하지 않고 바로 프로그램 종료
