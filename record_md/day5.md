@@ -4,9 +4,9 @@
 
 ## 실행 결과화면
 
-<img src="/record_image/day_5_console_ok.png">
+<img src="/record_image/day_5_console_ok.png" align="center">
 <p align="center">성공적으로 테스트케이스를 마친 모습</p>
-<img src="/record_image/day_5_console_fail.png">
+<img src="/record_image/day_5_console_fail.png" align = "center">
 <p align="center">패닉이 발생하였을 때의 모습</p>
 
 ## Source code
