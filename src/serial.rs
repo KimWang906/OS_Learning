@@ -1,3 +1,4 @@
+//직렬포트용 기본 드라이버
 use uart_16550::SerialPort;
 use spin::Mutex;
 use lazy_static::lazy_static;
