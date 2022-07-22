@@ -76,4 +76,6 @@
     GRUB이 호스트 시스템에 설치되어 있어야만 커널 파일로부터 부팅 가능한 디스크 이미지를 만들 수 있습니다.
     이 때문에 Windows 및 Mac에서는 부트로더를 개발하는 것이 Linux보다 어렵습니다.
 
-    출처 : https://os.phil-opp.com/ko/minimal-rust-kernel/
+## 출처 :
+
+    https://os.phil-opp.com/ko/minimal-rust-kernel/
