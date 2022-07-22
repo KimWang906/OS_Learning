@@ -4,12 +4,16 @@
 
 ## 실행 결과화면
 
-<img src="/record_image/day_4_console_ok.png"><br>
-<img src="/record_image/day_4_console_fail.png">
+<p align="center">
+    <img src="/record_image/day_4_console_ok.png">
+    <img src="/record_image/day_4_console_fail.png">
+</p>
 
 ## Source code
 
-<img src="/record_image/day_4_source_code.png"><br>
+<p align="center">
+    <img src="/record_image/day_4_source_code.png">
+</p>
 
     4일차에서 배운 가장 중요하다고 생각하는 코드입니다.
     serial 모듈에 있는 serial_println을 이용하여 패닉이 생길 경우 panic() 함수를 호출해
