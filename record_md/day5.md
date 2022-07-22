@@ -3,13 +3,11 @@
     요약 : 5일차에는 여러가지 테스트케이스를 진행해보았고, 코드를 파일의 목적에 맞게 정리하였습니다.
 
 ## 실행 결과화면
-<p align="center">
-    <img src="/record_image/day_5_console_ok.png">
-    성공적으로 테스트케이스를 마친 모습
-    <img src="/record_image/day_5_console_fail.png">
-    패닉이 발생하였을 때의 모습
-</p>
 
+<p align="center"><img src="/record_image/day_5_console_ok.png"></p>
+<p align="center">성공적으로 테스트케이스를 마친 모습</p>
+<p align="center"><img src="/record_image/day_5_console_fail.png"></p>
+<p align="center">패닉이 발생하였을 때의 모습</p>
 
 ## Source code
 

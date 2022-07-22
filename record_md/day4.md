@@ -4,10 +4,8 @@
 
 ## 실행 결과화면
 
-<p align="center">
-    <img src="/record_image/day_4_console_ok.png">
-    <img src="/record_image/day_4_console_fail.png">
-</p>
+<p align="center"><img src="/record_image/day_4_console_ok.png"></p>
+<p align="center"><img src="/record_image/day_4_console_fail.png"></p>
 
 ## Source code
 
