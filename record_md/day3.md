@@ -22,7 +22,7 @@
     VGA 텍스트 버퍼는 보통 25행 80열 크기의 2차원 배열이며, 해당 버퍼에 저장된 값들은 즉시 화면에 렌더링 됩니다. 
     배열의 각 원소는 화면에 출력될 문자를 아래의 형식으로 표현합니다:
 
-<img src="./readme_src/VGA_Text_Value.png" align="center">
+<img src="/readme_src/VGA_Text_Value.png" align="center">
 
     첫 바이트는 ASCII 인코딩으로 출력될 문자를 나타냅니다. 
     엄밀히 따지자면 ASCII 인코딩이 아닌, 해당 인코딩에 문자들을 추가하고 살짝 변형한 code page 437 이라는 인코딩을 이용합니다. 
@@ -33,7 +33,7 @@
     마지막 비트는 해당 문자가 화면에서 깜빡이도록 할지 결정합니다.
     아래의 색상들을 이용할 수 있습니다:
 
-<img src="./readme_src/VGA_Color_Value.png" align = "center">
+<img src="/readme_src/VGA_Color_Value.png" align = "center">
 
     두 번째 바이트의 네 번째 비트 (밝기 조정 비트)를 통해 파란색을 하늘색으로 조정하는 등 색의 밝기를 변경할 수 있습니다. 
     배경색을 지정하는 3비트 이후의 마지막 비트는 깜빡임 여부를 지정합니다.
@@ -49,11 +49,11 @@
 
 ### println 매크로를 이용하여 VGA로 출력하게 하는 코드
 
-<img src="./record_image/day_2_code.png" align = "center">
+<img src="/record_image/day_2_code.png" align = "center">
 
 ### 결과화면
 
-<img src="./record_image/day_2_qemu.png" align = "center">
+<img src="/record_image/day_2_qemu.png" align = "center">
 
 ## Source code
 
