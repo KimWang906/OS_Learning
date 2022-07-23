@@ -1,4 +1,4 @@
-# Chapter 5 - CPU Exceptions(예외)[https://os.phil-opp.com/cpu-exceptions/]
+# Chapter 5 : CPU Exceptions(예외) - 1[https://os.phil-opp.com/cpu-exceptions/]
 
 ## 목표
 
