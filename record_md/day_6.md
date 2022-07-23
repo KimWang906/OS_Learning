@@ -1,6 +1,4 @@
-# Chapter 5 - CPU Exceptions(예외)
-
-Rust OS DEV[https://os.phil-opp.com/cpu-exceptions/]
+# [Chapter 5 - CPU Exceptions(예외)](https://os.phil-opp.com/cpu-exceptions/)
 
 ## 목표
 
@@ -10,17 +8,17 @@ Rust OS DEV[https://os.phil-opp.com/cpu-exceptions/]
 
 ## 용어 풀이 관련 링크
 
-### Interrupt Descriptor Table[https://ko.wikipedia.org/wiki/인터럽트_서술자_테이블]
+### [Interrupt Descriptor Table](https://ko.wikipedia.org/wiki/인터럽트_서술자_테이블)
 
 ### CPU Exceptions
 
-Rust CPU 예외[https://yongj.in/rust%20os/rust-os-cpu-exceptions/]
-CPU 예외 1[https://luv-n-interest.tistory.com/997]
-CPU 예외 2[https://jihyewoo.tistory.com/18?category=936350]
+[Rust CPU 예외](https://yongj.in/rust%20os/rust-os-cpu-exceptions/)
+[CPU 예외 1](https://luv-n-interest.tistory.com/997)
+[CPU 예외 2](https://jihyewoo.tistory.com/18?category=936350)
 
 ## CPU Exceptions의 종류
 
-OS Dev[https://wiki.osdev.org/Exceptions]
+[OS Dev](https://wiki.osdev.org/Exceptions)
 
 <p align="center"><img src="/readme_src/CPU_Exceptions.png"></p>
 
@@ -41,11 +39,9 @@ Debug Exceptions는 다음과 같은 경우에 발생합니다.
     <li>I/O 읽기 또는 쓰기 중단점(Trap)</li>
     <li>단일 단계(Trap)</li>
     <li>작업 스위치(Trap)</li>
-<ul>
+</ul>
 
-#### Non-maskable Interrupt
-
-OS DEV Non-maskable Interrupt[https://wiki.osdev.org/Non_Maskable_Interrupt]
+#### [Non-maskable Interrupt](https://wiki.osdev.org/Non_Maskable_Interrupt)
 
 #### Breakpoint
 
@@ -124,7 +120,7 @@ OS DEV Non-maskable Interrupt[https://wiki.osdev.org/Non_Maskable_Interrupt]
     <li>존재하지 않는 세그먼트 설명자를 참조하는 Stack Segment Load일 때</li>
     <li>기본 레지스터로 ESP 또는 EBP를 사용하는 모든 PUSH 또는 POP 명령어의 스택 주소가 표준 형식이 아닌 동안 실행될 때</li>
     <li>스택 제한 검사가 실패했을 때</li>
-<ul>
+</ul>
 
     하드웨어 작업 전환 중에 예외가 발생하는 경우 처리기가 세그먼트 값을 의존해서는 안 됩니다.
     즉, 처리기는 새 작업을 다시 시작하기 전에 이러한 작업을 확인해야 합니다.
@@ -153,7 +149,7 @@ OS DEV Non-maskable Interrupt[https://wiki.osdev.org/Non_Maskable_Interrupt]
 <ul>
     <li>CR0.NE는 1입니다.</li>
     <li>마스킹되지 않은 x87 부동소수점 예외가 보류 중입니다.(즉, x87 부동소수점 상태 워드 레지스터의 예외 비트가 1로 설정됨)</li>
-<ul>
+</ul>
 
     저장된 명령 포인터는 예외가 발생했을 때 실행되려고 하는 명령을 가리킵니다.
     x87 명령 포인터 레지스터는 예외를 발생시킨 마지막 명령의 주소를 포함합니다.
