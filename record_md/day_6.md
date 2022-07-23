@@ -12,9 +12,9 @@
 
 ### CPU Exceptions
 
-[Rust CPU 예외](https://yongj.in/rust%20os/rust-os-cpu-exceptions/)
-[CPU 예외 1](https://luv-n-interest.tistory.com/997)
-[CPU 예외 2](https://jihyewoo.tistory.com/18?category=936350)
+[Rust CPU 예외](https://yongj.in/rust%20os/rust-os-cpu-exceptions/)<br>
+[CPU 예외 1](https://luv-n-interest.tistory.com/997)<br>
+[CPU 예외 2](https://jihyewoo.tistory.com/18?category=936350)<br>
 
 ## [CPU Exceptions의 종류](https://wiki.osdev.org/Exceptions)
 
@@ -137,7 +137,7 @@ Intel 문서에 따르면 이 작업을 수행하는 세 가지 방법이 있습
     <li>기본 레지스터로 ESP 또는 EBP를 사용하는 모든 PUSH 또는 POP 명령어의 스택 주소가 표준 형식이 아닌 동안 실행될 때</li>
     <li>스택 제한 검사가 실패했을 때</li>
 </ul>
-<p><br>
+<p>
 하드웨어 작업 전환 중에 예외가 발생하는 경우 처리기가 세그먼트 값을 의존해서는 안 됩니다.<br>
 즉, 처리기는 새 작업을 다시 시작하기 전에 이러한 작업을 확인해야 합니다.<br>
 Intel 문서에 따르면 이 작업을 수행하는 세 가지 방법이 있습니다.<br>
@@ -171,7 +171,7 @@ Intel 문서에 따르면 이 작업을 수행하는 세 가지 방법이 있습
     <li>CR0.NE는 1입니다.</li>
     <li>마스킹되지 않은 x87 부동소수점 예외가 보류 중입니다.(즉, x87 부동소수점 상태 워드 레지스터의 예외 비트가 1로 설정됨)</li>
 </ul>
-<p><br>
+<p>
 저장된 명령 포인터는 예외가 발생했을 때 실행되려고 하는 명령을 가리킵니다.<br>
 x87 명령 포인터 레지스터는 예외를 발생시킨 마지막 명령의 주소를 포함합니다.<br>
 <br>
@@ -227,7 +227,7 @@ OSXMMEXCEPT 플래그가 설정되지 않은 경우 SIMD 부동소수점 예외�
 
 ### Security Exception
 
-#### Reserved : 31 (0x1F)
+### Reserved : 31 (0x1F)
 
 ### Triple Fault
 
@@ -278,8 +278,8 @@ Traps는 트래핑 명령 실행 직후에 보고됩니다.
 이 테이블에서 우리는 각 CPU 예외에 대한 핸들러 함수를 지정할 수 있습니다.<br>
 하드웨어는 이 테이블을 직접 사용하므로 사전 정의된 형식을 따라야 합니다.<br>
 <br>
-각 항목은 다음과 같은 16바이트 구조를 가져야 합니다.
+<p align="center">각 항목은 다음과 같은 16바이트 구조를 가져야 합니다.</p>
 </p>
 <p align="center"><img src="/readme_src/interrupt_ex_table.png">
-<p>옵션 필드의 형식은 다음과 같습니다.</p>
+<p align="center">옵션 필드의 형식은 다음과 같습니다.</p>
 <p align="center"><img src="/readme_src/interrupt_ex_option_field.png">
