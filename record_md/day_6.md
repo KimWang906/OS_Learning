@@ -1,10 +1,10 @@
-# [Chapter 5 - CPU Exceptions(예외)](https://os.phil-opp.com/cpu-exceptions/)
+# [Chapter 5 : CPU Exceptions(예외) - 1](https://os.phil-opp.com/cpu-exceptions/)
 
 ## 목표
 
     CPU 예외는 잘못된 메모리 주소에 액세스하거나 0으로 나눌 때와 같이 다양한 잘못된 상황에서 발생합니다.
     이에 대응하기 위해 핸들러 기능을 제공 하는 Interrupt Descriptor Table을 설정해야 합니다.
-    오늘의 목표는 커널은 중단점 예외 를 포착하고 이후에 정상적인 실행을 재개하는 것입니다.
+    Chapter 5의 목표는 커널은 중단점 예외 를 포착하고 이후에 정상적인 실행을 재개하는 것입니다.
 
 ## 용어 풀이 관련 링크
 
@@ -16,20 +16,18 @@
 [CPU 예외 1](https://luv-n-interest.tistory.com/997)
 [CPU 예외 2](https://jihyewoo.tistory.com/18?category=936350)
 
-## CPU Exceptions의 종류
-
-[OS Dev](https://wiki.osdev.org/Exceptions)
+## [CPU Exceptions의 종류](https://wiki.osdev.org/Exceptions)
 
 <p align="center"><img src="/readme_src/CPU_Exceptions.png"></p>
 
-#### Divide-by-zero Error
+### Divide-by-zero Error
 
 Divide-by-zero Error는 DIV 또는 IDIV 명령을 사용하여 숫자를 0으로 나누거나 분할 결과가 너무 커서 대상에 표시할 수 없을 때 발생합니다.
 결함이 있는 DIV 또는 IDIV 명령은 코드의 어디에든 추가하기 쉽기 때문에 많은 OS 개발자들은 예외 처리 코드가 작동하는지 테스트하기 위해 이 예외를 사용합니다.
 
 저장된 명령 포인터는 예외를 발생시킨 DIV 또는 IDIV 명령을 가리킵니다.
 
-#### Debug
+### Debug
 
 Debug Exceptions는 다음과 같은 경우에 발생합니다.
 <ul>
@@ -41,9 +39,10 @@ Debug Exceptions는 다음과 같은 경우에 발생합니다.
     <li>작업 스위치(Trap)</li>
 </ul>
 
-#### [Non-maskable Interrupt](https://wiki.osdev.org/Non_Maskable_Interrupt)
+### [Non-maskable Interrupt](https://wiki.osdev.org/Non_Maskable_Interrupt)
 
-#### Breakpoint
+### Breakpoint
+
 <p>
 중단점 예외는 INT3 명령을 실행할 때 발생합니다.<br>
 일부 디버그 소프트웨어는 INT3 명령으로 명령을 대체하고 중단점이 Trap되면 INT3 명령을 원래 명령으로 대체하고 명령 포인터를 1씩 줄입니다.<br>
@@ -51,7 +50,7 @@ Debug Exceptions는 다음과 같은 경우에 발생합니다.
 저장된 명령 포인터는 INT3 명령 뒤에 있는 바이트를 가리킵니다.
 </p>
 
-#### Overflow
+### Overflow
 
 <p>
 RFLAGS의 오버플로 비트가 1로 설정된 상태에서 INTO 명령이 실행될 때 오버플로 예외가 발생합니다.<br>
@@ -59,7 +58,7 @@ RFLAGS의 오버플로 비트가 1로 설정된 상태에서 INTO 명령이 실�
 저장된 명령 포인터는 INTO 명령 뒤에 있는 명령을 가리킵니다.<br>
 </p>
 
-#### Bound Range Exceeded
+### Bound Range Exceeded
 
 <p>
 이 예외는 BOUND 명령이 실행될 때 발생할 수 있습니다.<br>
@@ -69,14 +68,14 @@ BOUND 명령은 배열 인덱스를 배열의 하한 및 상한과 비교합니�
 저장된 명령 포인터는 예외를 발생시킨 BOUND 명령을 가리킵니다.<br>
 </p>
 
-#### Invalid Opcode
+### Invalid Opcode
 
 <p>
 이 예외는 현재 명령어가 유효하지 않을 때 발생합니다.<br>
 (예: 지원하지 않는 이전 CPU에서 최신 SSE 명령어 를 사용하려고 할 때)<br>
 </p>
 
-#### Device Not Available
+### Device Not Available
 
 <p>
 Device Not Available 예외는 FPU 명령이 시도되었지만 FPU가 없을 때 발생합니다.<br>
@@ -87,7 +86,7 @@ Device Not Available 예외는 FPU 명령이 시도되었지만 FPU가 없을 �
 저장된 명령 포인터는 예외를 발생시킨 명령을 가리킵니다.<br>
 </p>
 
-#### Double Fault
+### Double Fault
 
 <p>
 예외가 발생하면 CPU는 해당 핸들러 함수를 호출하려고 합니다.<br>
@@ -95,14 +94,14 @@ Device Not Available 예외는 FPU 명령이 시도되었지만 FPU가 없을 �
 이 예외는 예외에 대해 등록된 핸들러 함수가 없는 경우에도 발생합니다.<br>
 </p>
 
-#### Coprocessor Segment Overrun
+### Coprocessor Segment Overrun
 
 <p>
 FPU가 프로세서 외부에 있을 때 보호 모드에서 별도의 세그먼트 검사를 수행했습니다.<br>
 486이 non-FPU 메모리 접근에서 이미 했던 것처럼 GPF에 의해 대신 처리되기 때문입니다.<br>
 </p>
 
-#### Invalid TSS
+### Invalid TSS
 
 <p>
 Invalid TSS 예외는 잘못된 세그먼트 선택기가 작업의 일부로 참조되거나 게이트 설명자를 통한 제어 전송의 결과로 참조될 때 발생하며,<br>
@@ -114,7 +113,7 @@ TSS에서 세그먼트 선택기를 로드하기 전에 예외가 발생하면 �
 오류 코드: 잘못된 TSS 예외는 선택기 색인 오류 코드를 설정합니다.<br>
 </p>
 
-#### Segment Not Present
+### Segment Not Present
 
 <p>
 Segment Not Present 예외는 현재 비트가 0으로 설정된 세그먼트 또는 게이트를 로드하려고 할 때 발생합니다.<br>
@@ -129,7 +128,7 @@ Intel 문서에 따르면 이 작업을 수행하는 세 가지 방법이 있습
 오류 코드: Segment Not Present 예외는 예외를 발생시킨 세그먼트 설명자의 세그먼트 선택기 색인 오류 코드를 설정합니다.<br>
 </p>
 
-#### Stack-Segment Fault
+### Stack-Segment Fault
 
 <p>Stack-Segment 결함은 다음 경우에 발생합니다.</p>
 
@@ -148,23 +147,23 @@ Intel 문서에 따르면 이 작업을 수행하는 세 가지 방법이 있습
 그렇지 않은 경우(현재 세그먼트 및 이미 사용 중인 세그먼트의 경우), 오류 코드는 0입니다.
 </p>
 
-#### General Protection Fault
+### General Protection Fault
 
 <p>
 가장 광범위한 원인을 가진 예외입니다.<br>
 사용자 수준 코드에서 권한 있는 명령을 실행하거나 구성 레지스터에 예약된 필드를 쓰는 것과 같은 다양한 종류의 액세스 위반에서 발생합니다.<br>
 </p>
 
-#### Page Fault
+### Page Fault
 
 <p>
 잘못된 메모리 접근 시 Page Fault가 발생합니다.<br>
 예를 들어, 현재 명령어가 매핑되지 않은 페이지에서 읽으려고 하거나 읽기 전용 페이지에 쓰려고 시도하는 경우입니다.<br>
 </p>
 
-#### Reserved : 15 (0xF)
+### Reserved : 15 (0xF)
 
-#### x87 Floating-Point Exception
+### x87 Floating-Point Exception
 
 <p>x87 부동소수점 예외는 FWAIT 또는 WAIT 명령 또는 대기 부동소수점 명령이 실행될 때 발생하며 다음 조건이 충족됩니다.</p>
 
@@ -180,7 +179,7 @@ x87 명령 포인터 레지스터는 예외를 발생시킨 마지막 명령의 
 그러나 예외 정보는 x87 상태 워드 레지스터에서 사용할 수 있습니다.
 </p>
 
-#### Alignment Check
+### Alignment Check
 
 <p>
 정렬 검사가 활성화되어 있고 정렬되지 않은 메모리 데이터 참조가 수행되는 경우 정렬 검사 예외가 발생합니다.<br>
@@ -192,7 +191,7 @@ CR0을 활성화하려면 CR0.AM 및 RFlags.AC를 둘 다 1로 설정해야합�
 저장된 명령 포인터는 예외를 발생시킨 명령을 가리킵니다.
 </p>
 
-#### Machine Check
+### Machine Check
 
 <p>
 Machine Check 예외는 모델에 따라 다르며 이를 지원하기 위해 프로세서 구현이 필요하지 않습니다.<br>
@@ -204,7 +203,7 @@ Machine Check 예외는 프로세서가 불량 메모리, 버스 오류, 캐시 
 저장된 명령 포인터의 값은 구현 및 예외에 따라 달라집니다.
 </p>
 
-#### SIMD Floating-Point Exception
+### SIMD Floating-Point Exception
 
 <p>
 SIMD Floating-Point Exception 예외는 마스킹되지 않은 128비트 미디어 부동 소수점 예외가 발생하고 CR4.OSXMMEXCPT 비트가 1로 설정된 경우에 발생합니다.<br>
@@ -216,28 +215,28 @@ OSXMMEXCEPT 플래그가 설정되지 않은 경우 SIMD 부동소수점 예외�
 그러나 예외 정보는 MXCSR 레지스터에서 사용할 수 있습니다.
 </p>
 
-#### Virtualization Exception
+### Virtualization Exception
 
-#### Control Protection Exception
+### Control Protection Exception
 
-#### Reserved : 22-27 (0x16-0x1B)
+### Reserved : 22-27 (0x16-0x1B)
 
-#### Hypervisor Injection Exception
+### Hypervisor Injection Exception
 
-#### VMM Communication Exception
+### VMM Communication Exception
 
-#### Security Exception
+### Security Exception
 
 #### Reserved : 31 (0x1F)
 
-#### Triple Fault
+### Triple Fault
 
 <p>
 CPU가 Double Fault 핸들러 기능을 호출하는 동안 예외가 발생하면 치명적인 Triple Fault가 발생합니다.<br>
 대부분은 삼중 오류를 잡거나 처리할 수 없기 때문에 프로세서는 스스로 재설정하여 운영 체제를 재부팅합니다.
 </p>
 
-#### FPU Error Interrupt
+### FPU Error Interrupt
 
 <p>
 과거에는 부동소수점 유닛이 프로세서에 부착할 수 있는 전용 칩이었으나,<br>
@@ -246,17 +245,17 @@ CPU가 Double Fault 핸들러 기능을 호출하는 동안 예외가 발생하�
 기본적으로 이 메서드는 이전 버전과의 호환성을 위해 부팅 시 사용할 수 없지만 OS는 그에 따라 설정을 업데이트해야 합니다.
 </p>
 
-### 오류에 따른 심각도
+## 오류에 따른 심각도
 
-#### Faults
+### Faults
 
 해당 오류는 수정될 수 있으며 프로그램은 정상작동합니다.
 
-#### Traps
+### Traps
 
 Traps는 트래핑 명령 실행 직후에 보고됩니다.
 
-#### Aborts
+### Aborts
 
 복구할 수 없는 심각한 오류입니다.
 
