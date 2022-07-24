@@ -1,11 +1,15 @@
 #![no_std]
 #![cfg_attr(test, no_main)]
 #![feature(custom_test_frameworks)]
+/*  오류가 발생하는 이유는 x86-interrupt 호출 규칙이 여전히 불안정하기 때문에 발생합니다.
+    따라서 lib.rs 상단에 추가하여 명시적으로 활성화 시켜야 합니다. */
+#![feature(abi_x86_interrupt)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
 pub mod serial;
 pub mod vga_buffer;
+pub mod interrupts;
 
 use core::panic::PanicInfo;
 
@@ -43,6 +47,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 #[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    init();      // new
     test_main();
     loop {}
 }
@@ -67,4 +72,8 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
         let mut port = Port::new(0xf4);
         port.write(exit_code as u32);
     }
+}
+
+pub fn init() {
+    interrupts::init_idt();
 }

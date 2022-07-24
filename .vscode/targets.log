@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul 23 19:42:04 2022
+# Make data base, printed on Sun Jul 24 21:28:16 2022
 
 # Variables
 
@@ -89,13 +89,13 @@ MAKEFILE_LIST := makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 5995
+VSCODE_PID = 5439
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/KimWang09:@/tmp/.ICE-unix/2650,unix/KimWang09:/tmp/.ICE-unix/2650
+SESSION_MANAGER = local/KimWang09:@/tmp/.ICE-unix/2568,unix/KimWang09:/tmp/.ICE-unix/2568
 # automatic
 *F = $(notdir $*)
 # environment
@@ -137,7 +137,7 @@ LC_MONETARY = ko_KR.UTF-8
 # environment
 LC_TIME = ko_KR.UTF-8
 # environment
-INVOCATION_ID = 62f72d9df476476e90fabb8539ea3991
+INVOCATION_ID = 673a2fd411fd4a03bce6aa7deb53ed1a
 # environment
 USERNAME = kimwang0906
 # environment
@@ -165,7 +165,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile
 .DEFAULT_GOAL := all
 # environment
-SYSTEMD_EXEC_PID = 2722
+SYSTEMD_EXEC_PID = 2594
 # environment
 DISPLAY = :1
 # environment
@@ -177,11 +177,11 @@ DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 2215
+MANAGERPID = 2147
 # environment
 LC_MEASUREMENT = ko_KR.UTF-8
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 5995
+GIO_LAUNCHED_DESKTOP_FILE_PID = 5439
 # environment
 _ = /usr/share/code/code
 # environment
@@ -191,7 +191,7 @@ XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-JOURNAL_STREAM = 8:32095
+JOURNAL_STREAM = 8:38380
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -282,7 +282,6 @@ makefile:
 #  Last modified 2022-07-18 11:40:11.054983619
 #  File has been updated.
 #  Successfully updated.
- 
 
 # Not a target:
 .SUFFIXES:
@@ -291,6 +290,7 @@ makefile:
 #  File has not been updated.
 
 # files hash-table stats:
+ 
 # Load=4/1024=0%, Rehash=0, Collisions=0/16=0%
 # VPATH Search Paths
 
@@ -304,6 +304,6 @@ makefile:
 # strcache performance: lookups = 30 / hit rate = 23%
 # hash-table stats:
 # Load=23/8192=0%, Rehash=0, Collisions=0/30=0%
-# Finished Make data base on Sat Jul 23 19:42:04 2022
+# Finished Make data base on Sun Jul 24 21:28:16 2022
 
  

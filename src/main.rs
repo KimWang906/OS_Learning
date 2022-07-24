@@ -11,9 +11,16 @@ use blog_os::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
+    blog_os::init(); // new
+
+    // int3 명령어를 이용해 breakpoint 예외를 발생시킵니다.
+    x86_64::instructions::interrupts::int3(); // new
+
+    // as before
     #[cfg(test)]
     test_main();
 
+    println!("It did not crash!");
     loop {}
 }
 
