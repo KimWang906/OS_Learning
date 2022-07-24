@@ -96,7 +96,7 @@ Preserved Register의 값은 함수 호출에서 변경되지 않은 상태로 �
 그래서 Scratch Register는 호출자에 의해 저장됩니다.
 </p>
 <p>x86_64에서 C 호출 규약은 다음과 같은 보존 레지스터와 스크래치 레지스터를 지정합니다.</p>
-<p align="center"><img src="./readme_src/P_S_Registers.png"></p>
+<p align="center"><img src="/readme_src/P_S_Registers.png"></p>
 <p>
 컴파일러는 이러한 규칙을 알고 있으므로 그에 따라 코드를 생성합니다.<br>
 대부분의 함수는 <b>push rbp</b>로 시작하는데, <b>push rbp</b>는 스택에 <b>rbp</b>를 백업하는 것이 그 예시 입니다.
@@ -127,7 +127,7 @@ x86-interrupt 호출 규약은 해당 조건에 맞는 호출 규약이므로 �
 <br>
 따라서 일반 함수 호출의 스택 프레임은 다음과 같습니다.
 </p>
-<p align="center"><img src="./readme_src/function-stack-frame.svg"></p>
+<p align="center"><img src="/readme_src/function-stack-frame.svg"></p>
 <p>
 그러나 예외 및 인터럽트 핸들러의 경우, 반환 주소를 푸시하는 것만으로는 충분하지 않을 수 있는데<br>
 인터럽트 핸들러는 종종 다른 컨텍스트(Stack Pointer, CPU flags 등)에서 실행되기 때문입니다.<br>
@@ -218,6 +218,8 @@ breakpoint 예외는 일반적으로 디버거에서 사용됩니다.
 
 ## Source code
 
-[Interrupt](/src/interrupts.rs)<br>
-[lib](/src/lib.rs)<br>
-[main](/src/main.rs)<br>
+### [Interrupt](/src/interrupts.rs)
+
+### [lib](/src/lib.rs)
+
+### [main](/src/main.rs)
