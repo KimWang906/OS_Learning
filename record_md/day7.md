@@ -207,9 +207,13 @@ breakpoint 예외는 일반적으로 디버거에서 사용됩니다.
 사용자가 프로그램을 계속하기를 원하면 디버거는 <b>int3</b> 명령을 원래 명령으로 다시 교체하고 프로그램을 계속합니다.
 
 ## 실행 결과
-<p align="center"><h3>Qemu</h3></p>
+
+### Qemu
+
 <p align="center"><img src="/record_image/day_7_interrupt_breakpoint.png"></p>
-<p align="center"><h3>Result</h3></p>
+
+### Result
+
 <p align="center"><img src="/record_image/day_7_interrupt_result.png"></p>
 
 ## Source code
