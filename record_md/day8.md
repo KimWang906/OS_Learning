@@ -66,7 +66,7 @@ IDT에 Page Fault Handler를 등록하지 않아 Double Fault가 발생합니다
 예를 들어, 다음과 같은 경우 어떻게 될까요?<br>
 <br>
 <b>1.</b> breakpoint 예외가 발생하지만 해당 핸들러 기능이 Swap Out(종료)되었습니다.<br>
-<b>2.</b> Page Fault가 발생했지만 Page Fault Handler가 종료)되었습니다.<br>
+<b>2.</b> Page Fault가 발생했지만 Page Fault Handler가 (종료)되었습니다.<br>
 <b>3.</b> Handler를 0으로 나누면 breakpoint 예외가 발생하지만 breakpoint handler가 Swap Out(종료)되었습니다.<br>
 <b>4.</b> 우리의 커널이 Stack Overflow가 일어나고 Guard Page가 작동합니다.<br>
 <br>
