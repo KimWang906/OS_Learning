@@ -165,7 +165,7 @@ Intel 문서에 따르면 이 작업을 수행하는 세 가지 방법이 있습
 
 ### x87 Floating-Point Exception
 
-<p>x87 부동소수점 예외는 FWAIT 또는 WAIT 명령 또는 대기 부동소수점 명령이 실행될 때 발생하며 다음 조건이 충족됩니다.</p>
+<p>x87 Floating-Point 예외는 FWAIT 또는 WAIT 명령 또는 대기 부동소수점 명령이 실행될 때 발생하며 다음 조건이 충족됩니다.</p>
 
 <ul>
     <li>CR0.NE는 1입니다.</li>
