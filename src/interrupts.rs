@@ -36,9 +36,11 @@ lazy_static! {
     static ref IDT: InterruptDescriptorTable = {
         let mut idt = InterruptDescriptorTable::new();
         idt.breakpoint.set_handler_fn(breakpoint_handler);
+        idt.double_fault.set_handler_fn(double_fault_handler); // new
         idt
     };
 }
+
 
 pub fn init_idt() {
     IDT.load();
@@ -49,6 +51,19 @@ extern "x86-interrupt" fn breakpoint_handler(
     stack_frame: InterruptStackFrame)
 {
     println!("EXCEPTION: BREAKPOINT\n{:#?}", stack_frame);
+}
+
+/*
+    처리기는 짧은 오류 메시지를 출력하고 예외 스택 프레임을 덤프하고, 이중 오류 처리기의 오류 코드는 항상 0이므로 인쇄할 필요가 없습니다.
+    중단점 처리기의 한 가지 차이점은 이중 오류 처리기가 프로그램의 실행 순서를 변경하여 다른 명령을 실행 수 있도록 하는 것입니다.
+    그 이유는 x86_64 아키텍처가 이중 장애 예외로부터의 반환을 허용하지 않기 때문입니다.
+*/
+
+// 호출 규약과 함수를 정의합니다(x86-interrupt, double_fault_handler)
+extern "x86-interrupt" fn double_fault_handler(
+    stack_frame: InterruptStackFrame, _error_code: u64) -> !
+{
+    panic!("EXCEPTION: DOUBLE FAULT\n{:#?}", stack_frame);
 }
 
 #[test_case]

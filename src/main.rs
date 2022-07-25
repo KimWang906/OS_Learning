@@ -11,10 +11,15 @@ use blog_os::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
-    blog_os::init(); // new
+    blog_os::init();
 
-    // int3 명령어를 이용해 breakpoint 예외를 발생시킵니다.
-    x86_64::instructions::interrupts::int3(); // new
+    fn stack_overflow() {
+        // for each recursion, the return address is pushed
+        stack_overflow(); 
+    }
+
+    // trigger a stack overflow
+    stack_overflow();
 
     // as before
     #[cfg(test)]
