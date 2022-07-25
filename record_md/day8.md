@@ -6,7 +6,7 @@
     해당 예외를 처리하면 시스템 재설정의 원인이 되는 치명적인 삼중 오류를 방지할 수 있습니다.
     모든 경우의 삼중 오류를 방지하기 위해 별도의 커널 스택에서 이중 오류를 확인하도록 인터럽트 스택 테이블을 설정할 것입니다.
 
-## 3중 오류 발생시키기
+## Triple Fault 발생시키기
 
 ### 오류 유발 코드
 
@@ -48,7 +48,7 @@ IDT에 Page Fault Handler를 등록하지 않아 Double Fault가 발생합니다
 
 <p align="center"><img src="/record_image/day_8_triple_fault_screen.png"></p>
 
-## 2중 오류의 원인
+## Double Fault의 원인
 
 <p>
 특별한 경우를 살펴보기 전에, 우리는 Double Fault의 정확한 원인을 알 필요가 있습니다.<br>
