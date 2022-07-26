@@ -31,12 +31,22 @@ pub fn init_idt() {
 static mut는 데이터 경쟁에 매우 취약하므로 액세스할 때마다 unsafe블록이 필요합니다.
 */
 use lazy_static::lazy_static;
+use crate::gdt;
+
+/*
+    set_cs를 사용하여 코드 세그먼트 레지스터를 다시 로드하고 load_tss를 사용하여 TSS를 로드합니다. 
+    함수가 안전하지 않은 것으로 확인되었으므로, 함수를 호출하려면 unsafe 블록이 필요합니다.
+    잘못된 Selector를 로드하여 메모리 안전을 해칠 수 있기 때문입니다.
+*/
 
 lazy_static! {
     static ref IDT: InterruptDescriptorTable = {
         let mut idt = InterruptDescriptorTable::new();
         idt.breakpoint.set_handler_fn(breakpoint_handler);
-        idt.double_fault.set_handler_fn(double_fault_handler); // new
+        unsafe {
+            idt.double_fault.set_handler_fn(double_fault_handler)
+                .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX); // new
+        }
         idt
     };
 }

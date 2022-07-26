@@ -30,6 +30,9 @@ test-timeout = 300          # (in seconds)
 name = "should_panic"
 harness = false
 
+[[test]]
+name = "stack_overflow"
+harness = false
 # 주의 : 현재 Cargo에 버그가 있어 일부 경우 cargo test에서 "duplicate lang item" 오류가 발생합니다.
 
 # # `cargo build` 실행 시 이용되는 빌드 설정
