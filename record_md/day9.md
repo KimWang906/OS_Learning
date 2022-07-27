@@ -19,7 +19,7 @@ x86_64 아키텍처는 예외가 발생할 때 미리 정의된 정상 스택으
 ## Global Descriptor Table
 
 GDT(Global Descriptor Table)는 페이징이 사실상의 표준이 되기 전에 메모리 분할에 사용되었던 기술입니다.
-커널/사용자 모드 구성이나 TSS 로딩과 같은 다양한 것들을 위해 64비트 모드에서도 여전히 필요합니다.
+Kernel / User mode 구성이나 TSS 로딩과 같은 다양한 것들을 위해 64bit mode에서도 여전히 필요합니다.
 
 ### GDT 구현
 

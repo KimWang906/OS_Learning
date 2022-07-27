@@ -28,6 +28,8 @@
 
 [Day 9 Recording note](./record_md/day9.md)
 
+[Day 10 Recording note](./record_md/day10.md)
+
 ## 컴퓨터의 부팅 과정
 
     전원이 켜졌을 때 컴퓨터가 맨 처음 하는 일은 바로 마더보드의 롬 (ROM)에 저장된 펌웨어 코드를 실행하는 것입니다. 

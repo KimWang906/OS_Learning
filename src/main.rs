@@ -11,7 +11,7 @@ use blog_os::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
-    // blog_os::init();
+    blog_os::init();
 
     // fn stack_overflow() {
     //     // for each recursion, the return address is pushed
