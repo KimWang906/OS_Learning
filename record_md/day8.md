@@ -10,24 +10,25 @@
 
 ### 오류 유발 코드
 
-    #[no_mangle]
-    pub extern "C" fn _start() -> ! {
-        println!("Hello World{}", "!");
+```rs
+#[no_mangle]
+pub extern "C" fn _start() -> ! {
+    println!("Hello World{}", "!");
 
-        blog_os::init();
+    blog_os::init();
 
-        // trigger a page fault
-        unsafe {
-            *(0xdeadbeef as *mut u64) = 42;
-        };
+    // trigger a page fault
+    unsafe {
+        *(0xdeadbeef as *mut u64) = 42;
+    };
 
-        // as before
-        #[cfg(test)]
-        test_main();
-
-        println!("It did not crash!");
-        loop {}
-    }
+    // as before
+    #[cfg(test)]
+    test_main();
+    println!("It did not crash!");
+    loop {}
+}
+```
 
 <p>
 <b>unsafe</b>를 사용하여 잘못된 주소 <b>0xdeadbeef</b>에 씁니다.<br>

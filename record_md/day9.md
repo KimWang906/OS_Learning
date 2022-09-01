@@ -7,9 +7,11 @@ x86_64 아키텍처는 예외가 발생할 때 미리 정의된 정상 스택으
 
 다음 코드는 Rust와 유사한 언어에서 구성된 테이블입니다.
 
-    struct InterruptStackTable {
-        stack_pointers: [Option<StackPointer>; 7],
-    }
+```rs
+struct InterruptStackTable {
+    stack_pointers: [Option<StackPointer>; 7],
+}
+```
 
 각 예외 Handler에 대해 IST에서 해당 IDT 항목의 stack_pointers 필드를 통해 Stack을 선택할 수 있습니다.
 예를 들어, IST의 첫 번째 Stack을 Double Fault Handler에 사용할 수 있습니다.
@@ -23,16 +25,18 @@ Kernel / User mode 구성이나 TSS 로딩과 같은 다양한 것들을 위해 
 
 ### GDT 구현
 
-    use x86_64::structures::gdt::{GlobalDescriptorTable, Descriptor};
+```rs
+use x86_64::structures::gdt::{GlobalDescriptorTable, Descriptor};
 
-    lazy_static! {
-        static ref GDT: GlobalDescriptorTable = {
-            let mut gdt = GlobalDescriptorTable::new();
-            gdt.add_entry(Descriptor::kernel_code_segment());
-            gdt.add_entry(Descriptor::tss_segment(&TSS));
-            gdt
-        };
-    }
+lazy_static! {
+    static ref GDT: GlobalDescriptorTable = {
+        let mut gdt = GlobalDescriptorTable::new();
+        gdt.add_entry(Descriptor::kernel_code_segment());
+        gdt.add_entry(Descriptor::tss_segment(&TSS));
+        gdt
+    };
+}
+```
 
 GDT가 로드되었지만 여전히 Stack Overflow에서 무한 루프가 발생합니다.
 
@@ -59,79 +63,77 @@ TSS가 로드되는 즉시 CPU가 유효한 IST(Interrupt Stack Table)에 액세
 
 ### GDT Source Code
 
-    //gdt.rs
-    use x86_64::VirtAddr;
-    use x86_64::structures::tss::TaskStateSegment;
-    use lazy_static::lazy_static;
+```rs
+//gdt.rs
+use x86_64::VirtAddr;
+use x86_64::structures::tss::TaskStateSegment;
+use lazy_static::lazy_static;
+pub const DOUBLE_FAULT_IST_INDEX: u16 = 0;
 
-    pub const DOUBLE_FAULT_IST_INDEX: u16 = 0;
-
-    /*  처음 두 단계에서는 gdt::init 함수의 code_selector 및 tss_selector 변수에 Access해야 합니다.
-        새로운 Selector Struct를 통해 static의 일부를 구성함으로써 이를 달성할 수 있습니다.
-    */
-    lazy_static! {
-        static ref TSS: TaskStateSegment = {
-            let mut tss = TaskStateSegment::new();
-            tss.interrupt_stack_table[DOUBLE_FAULT_IST_INDEX as usize] = {
-                const STACK_SIZE: usize = 4096 * 5;
-                static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
-
-                let stack_start = VirtAddr::from_ptr(unsafe { &STACK });
-                let stack_end = stack_start + STACK_SIZE;
-                stack_end
-            };
-            tss
+/*  처음 두 단계에서는 gdt::init 함수의 code_selector 및 tss_selector 변수에 Access해야 합니다.
+    새로운 Selector Struct를 통해 static의 일부를 구성함으로써 이를 달성할 수 있습니다.
+*/
+lazy_static! {
+    static ref TSS: TaskStateSegment = {
+        let mut tss = TaskStateSegment::new();
+        tss.interrupt_stack_table[DOUBLE_FAULT_IST_INDEX as usize] = {
+            const STACK_SIZE: usize = 4096 * 5;
+            static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
+            let stack_start = VirtAddr::from_ptr(unsafe { &STACK });
+            let stack_end = stack_start + STACK_SIZE;
+            stack_end
         };
+        tss
+    };
+}
+
+use x86_64::structures::gdt::{GlobalDescriptorTable, Descriptor};
+use x86_64::structures::gdt::SegmentSelector;
+
+lazy_static! {
+    static ref GDT: (GlobalDescriptorTable, Selectors) = {
+        let mut gdt = GlobalDescriptorTable::new();
+        let code_selector = gdt.add_entry(Descriptor::kernel_code_segment());
+        let tss_selector = gdt.add_entry(Descriptor::tss_segment(&TSS));
+        (gdt, Selectors { code_selector, tss_selector })
+    };
+}
+
+struct Selectors {
+    code_selector: SegmentSelector,
+    tss_selector: SegmentSelector,
+}
+
+// 이제 선택기를 사용하여 cs Segment Register를 다시 로드하고 다음 TSS를 로드할 수 있습니다.
+pub fn init() {
+    use x86_64::instructions::tables::load_tss;
+    use x86_64::instructions::segmentation::{CS, Segment};
+    
+    GDT.0.load();
+    unsafe {
+        CS::set_reg(GDT.1.code_selector);
+        load_tss(GDT.1.tss_selector);
     }
+}
 
-    use x86_64::structures::gdt::{GlobalDescriptorTable, Descriptor};
-    use x86_64::structures::gdt::SegmentSelector;
-
-    lazy_static! {
-        static ref GDT: (GlobalDescriptorTable, Selectors) = {
-            let mut gdt = GlobalDescriptorTable::new();
-            let code_selector = gdt.add_entry(Descriptor::kernel_code_segment());
-            let tss_selector = gdt.add_entry(Descriptor::tss_segment(&TSS));
-            (gdt, Selectors { code_selector, tss_selector })
-        };
-    }
-
-    struct Selectors {
-        code_selector: SegmentSelector,
-        tss_selector: SegmentSelector,
-    }
-
-    // 이제 선택기를 사용하여 cs Segment Register를 다시 로드하고 다음 TSS를 로드할 수 있습니다.
-    pub fn init() {
-        use x86_64::instructions::tables::load_tss;
-        use x86_64::instructions::segmentation::{CS, Segment};
-        
-        GDT.0.load();
+//interrupt.rs
+/*
+    set_cs를 사용하여 코드 세그먼트 레지스터를 다시 로드하고 load_tss를 사용하여 TSS를 로드합니다. 
+    함수가 안전하지 않은 것으로 확인되었으므로, 함수를 호출하려면 unsafe 블록이 필요합니다.
+    잘못된 Selector를 로드하여 메모리 안전을 해칠 수 있기 때문입니다.
+*/
+lazy_static! {
+    static ref IDT: InterruptDescriptorTable = {
+        let mut idt = InterruptDescriptorTable::new();
+        idt.breakpoint.set_handler_fn(breakpoint_handler);
         unsafe {
-            CS::set_reg(GDT.1.code_selector);
-            load_tss(GDT.1.tss_selector);
+            idt.double_fault.set_handler_fn(double_fault_handler)
+                .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX); // new
         }
-    }
-
-    //interrupt.rs
-    /*
-        set_cs를 사용하여 코드 세그먼트 레지스터를 다시 로드하고 load_tss를 사용하여 TSS를 로드합니다. 
-        함수가 안전하지 않은 것으로 확인되었으므로, 함수를 호출하려면 unsafe 블록이 필요합니다.
-        잘못된 Selector를 로드하여 메모리 안전을 해칠 수 있기 때문입니다.
-    */
-
-    lazy_static! {
-        static ref IDT: InterruptDescriptorTable = {
-            let mut idt = InterruptDescriptorTable::new();
-            idt.breakpoint.set_handler_fn(breakpoint_handler);
-            unsafe {
-                idt.double_fault.set_handler_fn(double_fault_handler)
-                    .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX); // new
-            }
-
-            idt
-        };
-    }
+        idt
+    };
+}
+```
 
 ## 결과
 
